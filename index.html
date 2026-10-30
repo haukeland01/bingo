@@ -1,15 +1,15 @@
 <!doctype html><html lang="no"><head><meta charset="utf-8"><title>Bingo</title>
 <style>
 html,body{margin:0;height:100%;background:#1b1240;color:#fff;font-family:system-ui,sans-serif;cursor:none}
-#board{display:grid;grid-template-columns:repeat(5,1fr);gap:2vw;padding:6vh 4vw;height:88vh;box-sizing:border-box}
-.col{padding:0 1vw;border-left:3px solid #ffffff33;display:flex;flex-direction:column;align-items:center;gap:3vh}
-.let{font-size:16vh;font-weight:900;color:#ffcc00;line-height:1}
-.num{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:14vw;font-weight:800;background:#2c2160;border-radius:3vw;transition:.3s}
+#board{display:grid;align-items:center;grid-template-columns:repeat(5,minmax(0,1fr));gap:2vw;padding:6vh 4vw;height:88vh;box-sizing:border-box}
+.col{min-width:0;box-sizing:border-box;padding:0 1vw;border-left:3px solid #ffffff33;display:flex;flex-direction:column;align-items:center;gap:3vh}
+.let{width:100%;text-align:center;font-size:16vh;font-weight:900;color:#ffcc00;line-height:1}
+.num{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:min(9vw,17vh);font-weight:800;background:#2c2160;border-radius:3vw;transition:.3s}
 .num.new{background:#ff4fa3;box-shadow:0 0 6vw #ff4fa3}
-.col:first-child{border-left:none}
-.c0 .let{color:#3fa9ff}.c1 .let{color:#ff4d4d}.c2 .let{color:#e8e8e8}.c3 .let{color:#3ddc6b}.c4 .let{color:#ffa733}
+.col:first-child{border-left-color:transparent}
+.c0 .let{width:100%;text-align:center;color:#3fa9ff}.c1 .let{width:100%;text-align:center;color:#ff4d4d}.c2 .let{width:100%;text-align:center;color:#e8e8e8}.c3 .let{width:100%;text-align:center;color:#3ddc6b}.c4 .let{width:100%;text-align:center;color:#ffa733}
 .c0 .num{border:4px solid #3fa9ff}.c1 .num{border:4px solid #ff4d4d}.c2 .num{border:4px solid #e8e8e8}.c3 .num{border:4px solid #3ddc6b}.c4 .num{border:4px solid #ffa733}
-.num{box-sizing:border-box}
+.num{box-sizing:border-box;height:auto!important;aspect-ratio:1/1;width:92%!important;max-height:60vh}
 </style></head><body ondblclick="document.documentElement.requestFullscreen()">
 <div id="board"></div>
 <script>
