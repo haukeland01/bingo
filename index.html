@@ -10,12 +10,16 @@ html,body{margin:0;height:100%;background:#1b1240;color:#fff;font-family:system-
 .c0 .let{width:100%;text-align:center;color:#3fa9ff}.c1 .let{width:100%;text-align:center;color:#ff4d4d}.c2 .let{width:100%;text-align:center;color:#e8e8e8}.c3 .let{width:100%;text-align:center;color:#3ddc6b}.c4 .let{width:100%;text-align:center;color:#ffa733}
 .c0 .num{border:4px solid #3fa9ff}.c1 .num{border:4px solid #ff4d4d}.c2 .num{border:4px solid #e8e8e8}.c3 .num{border:4px solid #3ddc6b}.c4 .num{border:4px solid #ffa733}
 .num{box-sizing:border-box;height:auto!important;aspect-ratio:1/1;width:92%!important;max-height:60vh}
+#board{align-items:stretch!important}
+.old{width:92%;display:flex;flex-wrap:wrap;gap:.8vh .6vw;justify-content:center}
+.old span{flex:0 0 calc(33% - .6vw);text-align:center;font-size:min(3vw,5.5vh);font-weight:700;padding:.4vh 0;border-radius:1vw;background:#ffffff14}
+.old span:first-child{background:#ffffff2e}
 </style></head><body ondblclick="document.documentElement.requestFullscreen()">
 <div id="board"></div>
 <script>
 const L="BINGO",lt=v=>L[Math.floor((v-1)/15)];let prev="";
 const T=new URLSearchParams(location.search).get("t");
-async function tick(){try{const r=await (await fetch(`https://ntfy.sh/${T}/json?poll=1&since=latest`,{cache:"no-store"})).text();if(!r.trim())return;const h=JSON.parse(JSON.parse(r.trim().split("\n").pop()).message);const k=JSON.stringify(h);if(k!=prev){prev=k;const cur={},last=h.at(-1);h.forEach(v=>cur[lt(v)]=v);
-board.innerHTML=[...L].map((x,j)=>`<div class="col c${j}"><div class="let">${x}</div><div class="num ${last&&lt(last)==x?"new":""}">${cur[x]??""}</div></div>`).join("")}}catch(e){}}
+async function tick(){try{const r=await (await fetch(`https://ntfy.sh/${T}/json?poll=1&since=latest`,{cache:"no-store"})).text();if(!r.trim())return;const h=JSON.parse(JSON.parse(r.trim().split("\n").pop()).message);const k=JSON.stringify(h);if(k!=prev){prev=k;const cur={},last=h.at(-1);[...L].forEach(x=>cur[x]=[]);h.forEach(v=>cur[lt(v)].unshift(v));
+board.innerHTML=[...L].map((x,j)=>`<div class="col c${j}"><div class="let">${x}</div><div class="num ${last&&lt(last)==x?"new":""}">${cur[x][0]??""}</div><div class="old">${cur[x].slice(1).map(v=>`<span>${v}</span>`).join("")}</div></div>`).join("")}}catch(e){}}
 tick();setInterval(tick,1000);
 </script></body></html>
