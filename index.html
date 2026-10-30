@@ -2,16 +2,20 @@
 <style>
 html,body{margin:0;height:100%;background:#1b1240;color:#fff;font-family:system-ui,sans-serif;cursor:none}
 #board{display:grid;grid-template-columns:repeat(5,1fr);gap:2vw;padding:6vh 4vw;height:88vh;box-sizing:border-box}
-.col{display:flex;flex-direction:column;align-items:center;gap:3vh}
+.col{padding:0 1vw;border-left:3px solid #ffffff33;display:flex;flex-direction:column;align-items:center;gap:3vh}
 .let{font-size:16vh;font-weight:900;color:#ffcc00;line-height:1}
 .num{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:14vw;font-weight:800;background:#2c2160;border-radius:3vw;transition:.3s}
 .num.new{background:#ff4fa3;box-shadow:0 0 6vw #ff4fa3}
+.col:first-child{border-left:none}
+.c0 .let{color:#3fa9ff}.c1 .let{color:#ff4d4d}.c2 .let{color:#e8e8e8}.c3 .let{color:#3ddc6b}.c4 .let{color:#ffa733}
+.c0 .num{border:4px solid #3fa9ff}.c1 .num{border:4px solid #ff4d4d}.c2 .num{border:4px solid #e8e8e8}.c3 .num{border:4px solid #3ddc6b}.c4 .num{border:4px solid #ffa733}
+.num{box-sizing:border-box}
 </style></head><body ondblclick="document.documentElement.requestFullscreen()">
 <div id="board"></div>
 <script>
 const L="BINGO",lt=v=>L[Math.floor((v-1)/15)];let prev="";
 const T=new URLSearchParams(location.search).get("t");
 async function tick(){try{const r=await (await fetch(`https://ntfy.sh/${T}/json?poll=1&since=latest`,{cache:"no-store"})).text();if(!r.trim())return;const h=JSON.parse(JSON.parse(r.trim().split("\n").pop()).message);const k=JSON.stringify(h);if(k!=prev){prev=k;const cur={},last=h.at(-1);h.forEach(v=>cur[lt(v)]=v);
-board.innerHTML=[...L].map(x=>`<div class="col"><div class="let">${x}</div><div class="num ${last&&lt(last)==x?"new":""}">${cur[x]??""}</div></div>`).join("")}}catch(e){}}
+board.innerHTML=[...L].map((x,j)=>`<div class="col c${j}"><div class="let">${x}</div><div class="num ${last&&lt(last)==x?"new":""}">${cur[x]??""}</div></div>`).join("")}}catch(e){}}
 tick();setInterval(tick,1000);
 </script></body></html>
