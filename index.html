@@ -20,7 +20,7 @@ html,body{margin:0;height:100%;background:#1b1240;color:#fff;font-family:system-
 <script>
 const L="BINGO",lt=v=>L[Math.floor((v-1)/15)];let prev="",lastLen=0,lastT=0,busy=false;
 const T=new URLSearchParams(location.search).get("t")||"bingo-015e3e45ed4d";
-function apply(m){if(!m||m.event!=="message"||m.time<lastT)return;let h;try{h=JSON.parse(m.message)}catch(e){return}if(!Array.isArray(h)||(m.time==lastT&&h.length<lastLen))return;lastT=m.time;lastLen=h.length;try{localStorage.bingoState=JSON.stringify({time:m.time,message:m.message})}catch(e){}const k=JSON.stringify(h);if(k==prev)return;prev=k;const cur={},last=h.at(-1);[...L].forEach(x=>cur[x]=[]);h.forEach(v=>cur[lt(v)].unshift(v));
+function apply(m){if(!m||m.event!=="message")return;let h,q;try{h=JSON.parse(m.message)}catch(e){return}if(Array.isArray(h))q=m.time*1000+h.length;else if(h&&Array.isArray(h.h)){q=h.s;h=h.h}else return;if(q<lastT)return;lastT=q;try{localStorage.bingoState=JSON.stringify({time:m.time,message:m.message})}catch(e){}const k=JSON.stringify(h);if(k==prev)return;prev=k;const cur={},last=h.at(-1);[...L].forEach(x=>cur[x]=[]);h.forEach(v=>cur[lt(v)].unshift(v));
 [...L].forEach((x,j)=>{let c=document.getElementById("c"+x);if(!c){board.insertAdjacentHTML("beforeend",`<div class="col c${j}" id="c${x}"><div class="let">${x}</div><div class="num"></div><div class="old"></div></div>`);c=document.getElementById("c"+x)}
 const n=c.querySelector(".num"),o=c.querySelector(".old"),nv=String(cur[x][0]??""),ov=cur[x].slice(1).map(v=>`<span>${v}</span>`).join("");
 if(n.textContent!==nv)n.textContent=nv;n.classList.toggle("new",!!last&&lt(last)==x);if(o.innerHTML!==ov)o.innerHTML=ov})}
