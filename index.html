@@ -14,11 +14,12 @@ html,body{margin:0;height:100%;background:#1b1240;color:#fff;font-family:system-
 .old{width:92%;display:flex;flex-wrap:wrap;gap:.8vh .6vw;justify-content:center}
 .old span{flex:0 0 calc(33% - .6vw);text-align:center;font-size:min(3vw,5.5vh);font-weight:700;padding:.4vh 0;border-radius:1vw;background:#ffffff14}
 .old span:first-child{background:#ffffff2e}
-</style></head><body ondblclick="document.documentElement.requestFullscreen()">
+</style></head><body ondblclick="document.documentElement.requestFullscreen()"><div id="lock" style="position:fixed;inset:0;z-index:99;background:#1b1240;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:system-ui,sans-serif;color:#fff"><div style="font-size:28px;font-weight:800">🔒 Skriv kode</div><input id="pin" type="password" inputmode="numeric" maxlength="8" style="font-size:32px;width:180px;text-align:center;padding:10px;border-radius:12px;border:0"><div id="pinmsg" style="color:#ff6b6b;height:20px"></div></div>
+<script>(function(){const ok=()=>{document.getElementById("lock").remove()};if(localStorage.bingoPin==="1337"){ok();return}const p=document.getElementById("pin");p.focus();p.addEventListener("input",()=>{if(p.value==="1337"){localStorage.bingoPin="1337";ok()}else if(p.value.length>=4)pinmsg.textContent="Feil kode"})})()</script>
 <div id="board"></div>
 <script>
 const L="BINGO",lt=v=>L[Math.floor((v-1)/15)];let prev="",lastT=0,busy=false;
-const T=new URLSearchParams(location.search).get("t");
+const T=new URLSearchParams(location.search).get("t")||"bingo-015e3e45ed4d";
 function apply(m){if(!m||m.event!=="message"||m.time<lastT)return;lastT=m.time;let h;try{h=JSON.parse(m.message)}catch(e){return}const k=JSON.stringify(h);if(k==prev)return;prev=k;const cur={},last=h.at(-1);[...L].forEach(x=>cur[x]=[]);h.forEach(v=>cur[lt(v)].unshift(v));
 [...L].forEach((x,j)=>{let c=document.getElementById("c"+x);if(!c){board.insertAdjacentHTML("beforeend",`<div class="col c${j}" id="c${x}"><div class="let">${x}</div><div class="num"></div><div class="old"></div></div>`);c=document.getElementById("c"+x)}
 const n=c.querySelector(".num"),o=c.querySelector(".old"),nv=String(cur[x][0]??""),ov=cur[x].slice(1).map(v=>`<span>${v}</span>`).join("");

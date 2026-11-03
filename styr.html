@@ -9,7 +9,8 @@ button{font-size:20px;border:none;border-radius:12px;padding:14px}
 .big{background:#ff4fa3;color:#fff;font-weight:800;font-size:24px}
 #msg{color:#ff8080;min-height:24px}#cur{display:flex;gap:6px;margin:10px 0}#cur div{flex:1;text-align:center;background:#2c2160;border-radius:10px;padding:8px;font-size:22px}
 #log{font-size:18px;line-height:1.7;opacity:.85}
-</style></head><body>
+</style></head><body><div id="lock" style="position:fixed;inset:0;z-index:99;background:#1b1240;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:system-ui,sans-serif;color:#fff"><div style="font-size:28px;font-weight:800">🔒 Skriv kode</div><input id="pin" type="password" inputmode="numeric" maxlength="8" style="font-size:32px;width:180px;text-align:center;padding:10px;border-radius:12px;border:0"><div id="pinmsg" style="color:#ff6b6b;height:20px"></div></div>
+<script>(function(){const ok=()=>{document.getElementById("lock").remove()};if(localStorage.bingoPin==="1337"){ok();return}const p=document.getElementById("pin");p.focus();p.addEventListener("input",()=>{if(p.value==="1337"){localStorage.bingoPin="1337";ok()}else if(p.value.length>=4)pinmsg.textContent="Feil kode"})})()</script>
 <div class="row" id="lets"></div>
 <form id="f" class="row"><input id="i" inputmode="numeric" placeholder="36" autocomplete="off"><button class="big">Send</button></form>
 <div id="msg"></div>
@@ -22,7 +23,7 @@ lets.innerHTML=[...L].map(x=>`<button type="button" class="lb" data-l="${x}">${x
 lets.onclick=e=>{const l=e.target.dataset.l;if(!l)return;sel=sel==l?"":l;[...lets.children].forEach(b=>b.classList.toggle("on",b.dataset.l==sel));i.focus()};
 function show(){const c={};h.forEach(v=>c[lt(v)]=v);cur.innerHTML=[...L].map(x=>`<div><b style="color:#ffcc00">${x}</b><br>${c[x]??"–"}</div>`).join("");
 log.innerHTML=`<b>${h.length} trukket:</b><br>`+(h.map((v,k)=>`${k+1}. ${lt(v)}${v}`).join(" &nbsp; ")||"Ingen ennå")}
-const T=new URLSearchParams(location.search).get("t");
+const T=new URLSearchParams(location.search).get("t")||"bingo-015e3e45ed4d";
 async function load(){try{const r=(await (await fetch(`https://ntfy.sh/${T}/json?poll=1&since=latest`,{cache:"no-store"})).text()).trim();h=r?JSON.parse(JSON.parse(r.split("\n").pop()).message):[]}catch(e){}show()}
 async function pub(){try{await fetch(`https://ntfy.sh/${T}`,{method:"POST",body:JSON.stringify(h)});msg.textContent=""}catch(e){msg.textContent="Fikk ikke sendt, sjekk nettet"}show()}
 async function post(p,b){if(p=="/add"){const t=b.v.replace(/[\s-]/g,"");const m=t.match(/^([BINGO])?(\d{1,2})$/);if(!m){msg.textContent="Skriv f.eks. N36";return}const v=+m[2];if(v<1||v>75){msg.textContent="Tallet må være 1–75";return}if(m[1]&&m[1]!=lt(v)){msg.textContent=`${v} hører til ${lt(v)}, ikke ${m[1]}`;return}h.push(v)}else if(p=="/undo")h.pop();else h=[];await pub()}
